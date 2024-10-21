@@ -1,59 +1,67 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { usePathname } from "expo-router"
+import React, { useEffect } from "react"
+import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
+import { View, StyleSheet, Text } from "react-native"
+import CustomDrawerItem from "@/components/customDrawerItem"
+import { Drawer } from "expo-router/drawer"
 
-import { useColorScheme } from '@/components/useColorScheme';
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+const CustomDrawerContent = (props: any) => {
+    const path_name = usePathname()
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
+    useEffect(() => {
+        console.log(path_name)
+    }, [path_name]);
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+    return (
+        // wraps the drawer content and allows it to be scrollable. It passes the props to the drawer content
+       <DrawerContentScrollView {...props}>
+            <View style={styles.infoContainer}>
+                <View style={styles.infoDetailsContainer}>
+                    <Text style={styles.appTitle}>Drawer Tabs</Text>
+                </View>
+            </View>
 
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
+            <CustomDrawerItem label="Home" path_name={path_name} route_path="/" is_active={path_name === "/"} />
+            <CustomDrawerItem label="About" path_name={path_name} route_path="/about" is_active={path_name === "/about"} />
+            <CustomDrawerItem label="Profile" path_name={path_name} route_path="/profile" is_active={path_name === "/profile"} />
+            <CustomDrawerItem label="Settings" path_name={path_name} route_path="/settings" is_active={path_name === "/settings"} />
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
+       </DrawerContentScrollView>
+    );
+}
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+export default function Layout() {
+    return (
+        <Drawer drawerContent={(props: any) => <CustomDrawerContent {...props} />} screenOptions={{headerShown: false}}>
+            <Drawer.Screen name="index" options={{headerShown: true, headerTitle: "Home"}}  />
+            <Drawer.Screen name="about" options={{headerShown: true, headerTitle: "About"}} />
+            <Drawer.Screen name="profile" options={{headerShown: true, headerTitle: "Profile"}} />
+        </Drawer>
+    );
+}
+
+
+const styles = StyleSheet.create({
+    // navItemLabel: {
+    //   marginLeft: -20,
+    //   fontSize: 18,
+    // },
+    infoContainer: {
+      flexDirection: "row",
+      paddingHorizontal: 10,
+      paddingVertical: 20,
+      borderBottomColor: "#ccc",
+      borderBottomWidth: 1,
+      marginBottom: 10,
+    },
+    infoDetailsContainer: {
+      marginTop: 25,
+      marginLeft: 10,
+    },
+    appTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
     }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
-  );
-}
+  });
+  
