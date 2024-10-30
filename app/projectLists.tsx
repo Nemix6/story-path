@@ -42,10 +42,14 @@ const ProjectLists = () => {
 
     useEffect(() => {
         async function fetchProjects() {
+            try {
             const projects = await getPublishedProjects();
             // console.log(projects);
             setProjects(projects);
             setLoading(false);
+            } catch (error) {
+            console.log(error);
+            }
         }
         fetchProjects();
     }, []);

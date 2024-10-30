@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
 import { useUser } from '@/components/UserContext';
-import { addTracking, getLocations, getTrackings } from '@/api/api';
+import { addTracking, getLocations, getProject, getTrackings } from '@/api/api';
 import { LocationData, TrackingApi } from '@/components/ShowMap';
 import { LocationApi } from './[project_id]';
 import { usePoints } from '@/components/PointsContext';
@@ -31,10 +31,12 @@ const QRscanner = () => {
 
   useEffect(() => {
     const handleTracking = async () => {
+      try {
       const parsedData = scannedData.split('-');
       const location_id = parseInt(parsedData[2]);
+      const project_id = parsedData[1];
       const location = locations.find((location) => location.id === location_id);
-      
+
       if (location) {
           const alreadyUnlocked = unlockedLocations.some((unlockedLocation) => unlockedLocation.id === location.id);
           console.log(alreadyUnlocked);
@@ -46,12 +48,21 @@ const QRscanner = () => {
               points: location.score_points,
             }
             console.log("Adding tracking");
-            addTracking(trackingData);
+            await addTracking(trackingData);
             setPoints(points + location.score_points);
+            setScannedData(`You have unlocked ${location.location_name} and earned ${location.score_points} points!`);
             setUnlockedLocations([...unlockedLocations, location]);
           } 
+        } else {
+          const project = await getProject(project_id);
+          if (project) {
+            setScannedData("The location you're trying to access does not belong to this project");
+          }
         }
+      } catch (error) {
+        setScannedData("The scanned QR code is not recognized. This is not a valid location.");
     }
+  }
     if (scannedData) {
       handleTracking();
     }
@@ -89,7 +100,7 @@ const QRscanner = () => {
       {scanned && (
         <View style={styles.scanResultContainer}>
 
-          <Text style={styles.scanResultText}>Scanned data: {scannedData}</Text>
+          <Text style={styles.scanResultText}>{scannedData}</Text>
           <Button title="Tap to Scan Again" onPress={() => setScanned(false)} />
         </View>
       )}
