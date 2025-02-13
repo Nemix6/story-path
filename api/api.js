@@ -1,12 +1,12 @@
 
 // Base URL for the Storypath RESTful API
-const API_BASE_URL = 'https://0b5ff8b0.uqcloud.net/api';
+// const API_BASE_URL = ;
 
 // JWT token for authorization, replace with your actual token from My Grades in Blackboard
-const JWT_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic3R1ZGVudCIsInVzZXJuYW1lIjoiczQ4MDA3MjQifQ.HICBr2sfiAQlZcHW2ORUphuVGncqE80ER71MR2IKH44';
+const JWT_TOKEN = ;
 
-// Your UQ student username, used for row-level security to retrieve your records
-const USERNAME = 's4800724';
+// Username, used for row-level security to retrieve your records
+const USERNAME = ;
 
 /**
  * Helper function to handle API requests.
@@ -174,9 +174,9 @@ async function main() {
 
   async function yea() {
     const newLocation = {
-      location_name: 'Cannon Hill Station',
+      location_name: 'Mater Hill Station',
       location_trigger: 'Description ....',
-      location_position: '(-27.46503539338441, 153.08935476172132)',
+      location_position: '(-23.44523339338441, 153.08915426132132)',
       score_points: 4,
       clue: 'First clue',
       location_content: 'Display initial clue',
