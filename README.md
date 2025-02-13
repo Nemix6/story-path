@@ -6,7 +6,7 @@ Welcome Page (website)
 
 Welcome Page for mobile devices (mobile app)
 - Will soon release the project for this.
-<img src="https://github.com/user-attachments/assets/972ba658-a7f9-4939-8a22-71d67837a8b0" width="200">
+<img src="https://github.com/user-attachments/assets/972ba658-a7f9-4939-8a22-71d67837a8b0" width="500">
 
 
 
